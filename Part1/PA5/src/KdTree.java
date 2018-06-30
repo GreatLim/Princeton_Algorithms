@@ -163,15 +163,18 @@ public class KdTree {
     public Point2D nearest(Point2D p)             // a nearest neighbor in the set to point p; null if the set is empty
     {
         if(p == null) throw new java.lang.IllegalArgumentException();
+        if(root == null) return null;
         return nearest(root, p, root.p);
     }
 
+
     private Point2D nearest(Node x, Point2D p, Point2D pt) {
         if(x == null) return pt;
-        if(x.p.distanceSquaredTo(p) <= pt.distanceSquaredTo(p)) {
+        
+        if(x.p.distanceSquaredTo(p) <= pt.distanceSquaredTo(p))
             pt = x.p;
-        }
-        if(p.x() < x.p.x()) {
+
+        if((x.direction == VERTICAL && p.x() < x.p.x()) || (x.direction == HORIZONAL && p.y() < x.p.y())) {
             pt = nearest(x.lb, p, pt);
             if(x.rt != null && pt.distanceSquaredTo(p) > x.rt.rect.distanceSquaredTo(p))
                 pt = nearest(x.rt, p, pt);
